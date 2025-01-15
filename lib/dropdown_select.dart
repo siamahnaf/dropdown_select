@@ -970,7 +970,14 @@ class MultiValueDropDownController extends ChangeNotifier {
 class ListPadding {
   double top;
   double bottom;
-  ListPadding({this.top = 15, this.bottom = 15});
+  double left;
+  double right;
+  ListPadding({
+    this.top = 15,
+    this.bottom = 15,
+    this.left = 10,
+    this.right = 10,
+  });
 }
 
 class KeyboardVisibilityBuilder extends StatefulWidget {

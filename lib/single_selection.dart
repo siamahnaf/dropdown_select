@@ -155,8 +155,8 @@ class _SingleSelectionState extends State<SingleSelection> {
                 height: widget.listTileHeight,
                 child: Padding(
                   padding: EdgeInsets.only(
-                      right: 10,
-                      left: 10,
+                      right: widget.listPadding.right,
+                      left: widget.listPadding.left,
                       bottom: widget.listPadding.bottom,
                       top: widget.listPadding.top),
                   child: InkWell(

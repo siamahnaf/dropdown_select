@@ -56,8 +56,11 @@ class _MultiSelectionState extends State<MultiSelection> {
                     height: widget.listTileHeight,
                     child: Padding(
                       padding: EdgeInsets.only(
-                          bottom: widget.listPadding.bottom,
-                          top: widget.listPadding.top),
+                        bottom: widget.listPadding.bottom,
+                        top: widget.listPadding.top,
+                        left: widget.listPadding.left,
+                        right: widget.listPadding.right,
+                      ),
                       child: Row(
                         children: [
                           Expanded(
