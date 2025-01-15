@@ -65,9 +65,6 @@ DropdownSelect(
 ```
 
 ## Demo
-https://lh3.googleusercontent.com/d/11eJ_4gAbcT8-NTNKtA4m94jvguEn7zZJ
-
-https://drive.google.com/file/d/11eJ_4gAbcT8-NTNKtA4m94jvguEn7zZJ/view?usp=sharing
 
 <table>
   <tr>
@@ -76,9 +73,9 @@ https://drive.google.com/file/d/11eJ_4gAbcT8-NTNKtA4m94jvguEn7zZJ/view?usp=shari
     <th>Single Dropdown with Clear Option</th>
   </tr>
   <tr>
-    <td><img src="https://lh3.googleusercontent.com/d/1cDNN7XGCIMtab7uitXwLhW8sTooZG-Df" alt="Single Dropdown" height="500" width="260"></td>
-    <td><img src="https://lh3.googleusercontent.com/d/1Bg5a6INkB_aC2RhhnSFY44rl30jKWJ_o" alt="Single Dropdown with Search Option" height="500" width="260"></td>
-    <td><img src="https://lh3.googleusercontent.com/d/1DL1RV_pt2puCR7uoY0HyGd8gmg5MrqVj" alt="Single Dropdown with Clear Option" height="500" width="260"></td>
+    <td><img src="https://github.com/srtraj/dropdown_textfield/raw/development/example/examples/single-dropdown.gif" alt="Single Dropdown" height="500" width="260"></td>
+    <td><img src="https://github.com/srtraj/dropdown_textfield/raw/development/example/examples/single-dropdown-with-search-option.gif" alt="Single Dropdown with Search Option" height="500" width="260"></td>
+    <td><img src="https://github.com/srtraj/dropdown_textfield/raw/development/example/examples/single-dropdown-with-clearOption.gif" alt="Single Dropdown with Clear Option" height="500" width="260"></td>
   </tr>
 </table>
 
@@ -88,8 +85,8 @@ https://drive.google.com/file/d/11eJ_4gAbcT8-NTNKtA4m94jvguEn7zZJ/view?usp=shari
     <th>Multiple Dropdown with All Selected Items</th>
   </tr>
   <tr>
-    <td><img src="https://lh3.googleusercontent.com/d/11eJ_4gAbcT8-NTNKtA4m94jvguEn7zZJ" alt="Multiple Dropdown" height="500" width="260"></td>
-    <td><img src="https://lh3.googleusercontent.com/d/1Fr-5VkJ-b1uI2pwqlbutMs5yzpeI_LCe" alt="Multiple Dropdown with All Selected Items" height="500" width="260"></td>
+    <td><img src="https://github.com/srtraj/dropdown_textfield/raw/development/example/examples/multiselection-dropdown.gif" alt="Multiple Dropdown" height="500" width="260"></td>
+    <td><img src="https://github.com/srtraj/dropdown_textfield/raw/development/example/examples/multiselection-with-all-selected-items.gif" alt="Multiple Dropdown with All Selected Items" height="500" width="260"></td>
   </tr>
 </table>
 
@@ -112,7 +109,7 @@ You need to use `SingleValueDropDownController` for single dropdown and `MultiVa
 - **searchTextStyle**: Text style for the search text field.
 - **searchAutofocus**: Set to `true` to autofocus the search text field. Applicable only if `enableSearch=true`. Default value is `false`.
 - **searchShowCursor**: Set to `false` to hide the cursor from the search text field. Applicable only if `enableSearch=true`.
-- **searchDecoration**: Search bar decoration.
+- **searchDecoration**: Search bar.
 - **clearOption**: Set to `false` to hide the clear suffix icon button from the text field.
 - **clearIconProperty**: Customizes the clear icon size and color.
 - **listSpace**: Space between the text field and the list. Default value is 0.
