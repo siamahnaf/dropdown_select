@@ -560,19 +560,25 @@ class _DropdownSelectState extends State<DropdownSelect>
             enabled: widget.isEnabled,
             readOnly: widget.readOnly,
             onTapOutside: (event) {
-              final RenderBox renderBox =
-                  overlayKey.currentContext?.findRenderObject() as RenderBox;
-              final overlayPosition = renderBox.localToGlobal(Offset.zero);
-              final overlaySize = renderBox.size;
-              bool isOverlayTap = (overlayPosition.dx <= event.position.dx &&
-                      event.position.dx <=
-                          overlayPosition.dx + overlaySize.width) &&
-                  (overlayPosition.dy <= event.position.dy &&
-                      event.position.dy <=
-                          overlayPosition.dy + overlaySize.height);
+              final context = overlayKey.currentContext;
+              if (context != null) {
+                final RenderBox? renderBox =
+                    context.findRenderObject() as RenderBox?;
+                if (renderBox != null) {
+                  final overlayPosition = renderBox.localToGlobal(Offset.zero);
+                  final overlaySize = renderBox.size;
+                  bool isOverlayTap =
+                      (overlayPosition.dx <= event.position.dx &&
+                              event.position.dx <=
+                                  overlayPosition.dx + overlaySize.width) &&
+                          (overlayPosition.dy <= event.position.dy &&
+                              event.position.dy <=
+                                  overlayPosition.dy + overlaySize.height);
 
-              if (!isOverlayTap) {
-                _textFieldFocusNode.unfocus();
+                  if (!isOverlayTap) {
+                    _textFieldFocusNode.unfocus();
+                  }
+                }
               }
             },
             onTap: () {
