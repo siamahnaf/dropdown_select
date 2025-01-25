@@ -59,6 +59,7 @@ class DropdownSelect extends StatefulWidget {
       this.textStyle,
       this.onChanged,
       this.validator,
+      this.selectColor = Colors.orange,
       this.isEnabled = true,
       this.enableSearch = false,
       this.readOnly = true,
@@ -78,6 +79,7 @@ class DropdownSelect extends StatefulWidget {
       this.clearIconProperty,
       this.listPadding,
       this.listTextStyle,
+      this.selectListTextStyle,
       this.keyboardType,
       this.autovalidateMode})
       : assert(
@@ -87,9 +89,8 @@ class DropdownSelect extends StatefulWidget {
         assert(!(!readOnly && enableSearch),
             'readOnly!=true or enableSearch=true both condition does not work'),
         assert(
-          !(controller != null &&
-              !(controller is! SingleValueDropDownController)),
-          'controller must be type of SingleValueDropDownController',
+          controller == null || controller is SingleValueDropDownController,
+          'controller must be of type SingleValueDropDownController',
         ),
         checkBoxProperty = null,
         isMultiSelection = false,
@@ -130,9 +131,8 @@ class DropdownSelect extends StatefulWidget {
       : assert(initialValue == null || controller == null,
             'you cannot add both initialValue and multiController\nset initial value using controller\n\tMultiValueDropDownController(data:initial value)'),
         assert(
-          !(controller != null &&
-              !(controller is! MultiValueDropDownController)),
-          'controller must be type of MultiValueDropDownController',
+          controller == null || controller is MultiValueDropDownController,
+          'controller must be of type MultiValueDropDownController',
         ),
         multiController = controller,
         isMultiSelection = true,
@@ -141,6 +141,8 @@ class DropdownSelect extends StatefulWidget {
         searchTextStyle = null,
         searchAutofocus = false,
         searchKeyboardType = null,
+        selectColor = Colors.red,
+        selectListTextStyle = null,
         searchShowCursor = null,
         singleController = null,
         searchDecoration = null,
@@ -182,6 +184,9 @@ class DropdownSelect extends StatefulWidget {
 
   ///customize dropdown icon size and color
   final IconProperty? dropDownIconProperty;
+
+  //Single Select selection Color
+  final Color selectColor;
 
   ///by setting isEnabled=false to disable textfield,default value true
   final bool isEnabled;
@@ -239,6 +244,7 @@ class DropdownSelect extends StatefulWidget {
 
   ///dropdown list item text style
   final TextStyle? listTextStyle;
+  final TextStyle? selectListTextStyle;
 
   final TextInputType? keyboardType;
   final AutovalidateMode? autovalidateMode;
@@ -282,6 +288,7 @@ class _DropdownSelectState extends State<DropdownSelect>
   late double _listTileHeight;
   late double _keyboardHeight;
   late TextStyle _listTileTextStyle;
+  late TextStyle _selectListTextStyle;
   late ListPadding _listPadding;
   late TextDirection _currentDirection;
   GlobalKey overlayKey = GlobalKey();
@@ -340,12 +347,27 @@ class _DropdownSelectState extends State<DropdownSelect>
     }
 
     ///initial value load
+    updateInitialValue();
+    updateFunction();
+    super.initState();
+  }
+
+  Size _textWidgetSize(String text, TextStyle style) {
+    final TextPainter textPainter = TextPainter(
+        text: TextSpan(text: text, style: style),
+        maxLines: 1,
+        textDirection: TextDirection.ltr)
+      ..layout(minWidth: 0, maxWidth: double.infinity);
+    return textPainter.size;
+  }
+
+  updateInitialValue() {
     if (widget.initialValue != null) {
       _dropDownList = List.from(widget.dropDownList);
       if (widget.isMultiSelection) {
         for (int i = 0; i < widget.initialValue.length; i++) {
           var index = _dropDownList.indexWhere((element) =>
-              element.name.trim() == widget.initialValue[i].trim());
+              element.value.trim() == widget.initialValue[i].trim());
           if (index != -1) {
             _multiSelectionValue[index] = true;
           }
@@ -359,26 +381,16 @@ class _DropdownSelectState extends State<DropdownSelect>
                 ? (widget.initialValue ?? []).join(',')
                 : '$count item selected');
       } else {
-        var index = _dropDownList.indexWhere(
-            (element) => element.name.trim() == widget.initialValue.trim());
+        var element = _dropDownList.firstWhere(
+          (element) => element.value.trim() == widget.initialValue.trim(),
+          orElse: () => DropDownValueModel(value: '', name: ''),
+        );
 
-        if (index != -1) {
-          _cnt.text = widget.initialValue;
+        if (element.value.isNotEmpty) {
+          _cnt.text = element.name;
         }
       }
     }
-
-    updateFunction();
-    super.initState();
-  }
-
-  Size _textWidgetSize(String text, TextStyle style) {
-    final TextPainter textPainter = TextPainter(
-        text: TextSpan(text: text, style: style),
-        maxLines: 1,
-        textDirection: TextDirection.ltr)
-      ..layout(minWidth: 0, maxWidth: double.infinity);
-    return textPainter.size;
   }
 
   updateFunction({DropdownSelect? oldWidget}) {
@@ -448,6 +460,8 @@ class _DropdownSelectState extends State<DropdownSelect>
 
       _listTileTextStyle =
           (widget.listTextStyle ?? Theme.of(context).textTheme.titleMedium)!;
+      _selectListTextStyle = (widget.selectListTextStyle ??
+          Theme.of(context).textTheme.titleMedium)!;
       _listTileHeight =
           _textWidgetSize('dummy Text', _listTileTextStyle).height +
               _listPadding.top +
@@ -469,6 +483,7 @@ class _DropdownSelectState extends State<DropdownSelect>
   void didUpdateWidget(covariant DropdownSelect oldWidget) {
     super.didUpdateWidget(oldWidget);
     updateFunction(oldWidget: oldWidget);
+    updateInitialValue();
   }
 
   @override
@@ -506,7 +521,7 @@ class _DropdownSelectState extends State<DropdownSelect>
         widget.singleController!.clearDropDown();
       }
       if (widget.onChanged != null) {
-        widget.onChanged!('');
+        widget.onChanged!(DropDownValueModel(name: '', value: ''));
       }
     }
     setState(() {});
@@ -800,6 +815,8 @@ class _DropdownSelectState extends State<DropdownSelect>
                         listTileHeight: _listTileHeight,
                         dropDownList: _dropDownList,
                         listTextStyle: _listTileTextStyle,
+                        selectListTextStyle: _selectListTextStyle,
+                        selectColor: widget.selectColor,
                         onChanged: (item) {
                           setState(() {
                             _cnt.text = item.name;

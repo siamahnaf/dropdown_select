@@ -18,6 +18,8 @@ class SingleSelection extends StatefulWidget {
       required this.mainController,
       required this.autoSort,
       required this.listTileHeight,
+      required this.selectColor,
+      this.selectListTextStyle,
       this.onSearchTap,
       this.onSearchSubmit,
       this.listTextStyle,
@@ -34,6 +36,7 @@ class SingleSelection extends StatefulWidget {
   final FocusNode searchFocusNode;
   final FocusNode mainFocusNode;
   final TextInputType? searchKeyboardType;
+  final Color selectColor;
   final bool searchAutofocus;
   final bool? searchShowCursor;
   final TextEditingController mainController;
@@ -41,6 +44,7 @@ class SingleSelection extends StatefulWidget {
   final Function? onSearchTap;
   final Function? onSearchSubmit;
   final TextStyle? listTextStyle;
+  final TextStyle? selectListTextStyle;
   final ListPadding listPadding;
   final InputDecoration? searchDecoration;
   final IconProperty? clearIconProperty;
@@ -151,20 +155,34 @@ class _SingleSelectionState extends State<SingleSelection> {
             padding: EdgeInsets.zero,
             itemCount: newDropDownList.length,
             itemBuilder: (BuildContext context, int index) {
-              return SizedBox(
+              return Container(
                 height: widget.listTileHeight,
+                decoration: BoxDecoration(
+                  color: widget.mainController.text.trim() ==
+                          newDropDownList[index].name
+                      ? widget.selectColor
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 child: Padding(
                   padding: EdgeInsets.only(
-                      right: widget.listPadding.right,
-                      left: widget.listPadding.left,
-                      bottom: widget.listPadding.bottom,
-                      top: widget.listPadding.top),
+                    right: widget.listPadding.right,
+                    left: widget.listPadding.left,
+                    bottom: widget.listPadding.bottom,
+                    top: widget.listPadding.top,
+                  ),
                   child: InkWell(
-                      onTap: () {
-                        widget.onChanged(newDropDownList[index]);
-                      },
-                      child: Text(newDropDownList[index].name,
-                          style: widget.listTextStyle)),
+                    onTap: () {
+                      widget.onChanged(newDropDownList[index]);
+                    },
+                    child: Text(
+                      newDropDownList[index].name,
+                      style: widget.mainController.text.trim() ==
+                              newDropDownList[index].name
+                          ? widget.selectListTextStyle
+                          : widget.listTextStyle,
+                    ),
+                  ),
                 ),
               );
             },

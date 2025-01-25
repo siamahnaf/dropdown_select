@@ -2,27 +2,13 @@
 
 A Flutter dropdown widget with Material Design styling, supporting single/multi-select options and tooltips for enhanced usability.
 
-> This is a fork of [dropdown_textfield](https://github.com/srtraj/dropdown_textfield) adding typescript support and fixing nextjs implementation!
+> This is a fork of [dropdown_textfield](https://github.com/srtraj/dropdown_textfield) by adding many community wanted features
 
 - Searchable dropdown
 - Single & multi-selection
 - Material design styling
 - Totally customizable UI
 - Tooltip for multi selection dropdown item
-
-## Installation
-Copy dependencies to your `pubspec.yaml`
-
-```yaml
-dependencies:
-  dropdown_select: ^1.2.1
-```
-
-or copy and run following command
-
-```bash
-flutter pub add dropdown_select
-```
 
 ## Usage
 
@@ -95,30 +81,68 @@ DropdownSelect(
 ### Controllers
 You need to use `SingleValueDropDownController` for single dropdown and `MultiValueDropDownController` for multiple dropdown.
 
-### Properties
-- **dropdownContainerDecoration**: Customize main dropdown decorations.
+## Properties
+
+###  Single Select
+
+- **controller**: Single and multiple dropdown controller
 - **initialValue**: Sets the initial value. If null or not in the `dropDownList`, it will not display any value.
 - **dropDownList**: A list of dropdown values of type `<DropDownValueModel>`.
-- **onChanged**: Listens for item selection changes. Returns a single `DropDownValueModel` object for single selection dropdown, and a list of `DropDownValueModel` objects for multi-selection dropdown.
-- **textFieldDecoration**: Overrides the default text field decoration.
-- **dropDownIconProperty**: Customizes the dropdown icon size and color.
+- **padding**: Main widget padding
+- **textStyle**: `TextFormField` basic text style
+- **onChanged**: Listens for item selection changes.
+- **validator**: Validator for validating `dropdown_select`
+- **selectColor**: Background color for dropdown select item from list. Highlight color for selected item from DropdownList.
 - **isEnabled**: Set to `false` to disable the text field. Default value is `true`.
 - **enableSearch**: Set to `true` to enable the search option in the dropdown. Currently available only for single selection dropdown.
+- **readOnly**: Set to `false` to enable writing on text field.
+- **dropdownContainerDecoration**: Customize main dropdown decorations.
+- **textFieldDecoration**: Overrides the default text field decoration.
+- **dropDownIconProperty**: Customizes the dropdown icon size and color. It support `icon`, `color` and `size` property
 - **dropDownItemCount**: Maximum number of dropdown items to display. Default value is 6.
-- **searchKeyboardType**: Overrides the default search keyboard type. Applicable only if `enableSearch=true`.
 - **searchTextStyle**: Text style for the search text field.
-- **searchAutofocus**: Set to `true` to autofocus the search text field. Applicable only if `enableSearch=true`. Default value is `false`.
-- **searchShowCursor**: Set to `false` to hide the cursor from the search text field. Applicable only if `enableSearch=true`.
-- **searchDecoration**: Search bar.
-- **clearOption**: Set to `false` to hide the clear suffix icon button from the text field.
-- **clearIconProperty**: Customizes the clear icon size and color.
-- **listSpace**: Space between the text field and the list. Default value is 0.
+- **searchFocusNode**: Focus node for search text field.
+- **textFieldFocusNode**: Focus node for main text field.
+- **searchAutofocus**: To enable or disable auto focus for search text field.
+- **searchDecoration**: Input decoration for search text field.
+- **searchShowCursor**: Show or hide cursor for search text field.
+- **searchKeyboardType**: Keyboard type for search text field
+- **listSpace**: Spacing for list on DropdownList. Default is `0`
+- **clearOption**: Enable or disable clear button
+- **clearIconProperty**: Clear icon property. Same as `dropdownIconProperty`
 - **listPadding**: Padding for dropdown list items.
+- **listTextStyle**: Text style for dropdown list items.
+- **selectListTextStyle**: Text style for dropdown selected item
+- **keyboardType**: Keyboard type for main text field
+- **autovalidateMode**: To enable auto validation
+
+
+### Multi Select
+- **controller**: Single and multiple dropdown controller
+- **displayCompleteItem**: Set to true to display the complete list of selected items in the text field. Otherwise, it will display as "number_of_items selected".
+- **initialValue**: Sets the initial value. If null or not in the `dropDownList`, it will not display any value.
+- **dropDownList**: A list of dropdown values of type `<DropDownValueModel>`.
+- **padding**: Main widget padding
+- **textStyle**: `TextFormField` basic text style
+- **onChanged**: Listens for item selection changes.
+- **validator**: Validator for validating `dropdown_select`
+- **isEnabled**: Set to `false` to disable the text field. Default value is `true`.
+- **dropdownContainerDecoration**: Customize main dropdown decorations.
+- **dropDownIconProperty**: Customizes the dropdown icon size and color. It support `icon`, `color` and `size` property
+- **dropDownItemCount**: Maximum number of dropdown items to display. Default value is 6.
+- **searchFocusNode**: Focus node for search text field.
+- **textFieldFocusNode**: Focus node for main text field.
+- **listSpace**: Spacing for list on DropdownList. Default is `0`
+- **clearOption**: Enable or disable clear button
+- **clearIconProperty**: Clear icon property. Same as `dropdownIconProperty`
+- **clearIconProperty**: Customizes the clear icon size and color.
 - **submitButtonText**: Text for the multi-dropdown submit button.
 - **submitButtonColor**: Color of the multi-dropdown submit button.
 - **submitButtonTextStyle**: Text style for the multi-dropdown submit button.
+- **listPadding**: Padding for dropdown list items.
 - **listTextStyle**: Text style for dropdown list items.
 - **checkBoxProperty**: Customizes the properties of multiple checkboxes.
+- **autovalidateMode**: To enable auto validation
 
-# Forking By Siam Ahnaf
+### Re-arranged By Siam Ahnaf
 https://siamahnaf.com
