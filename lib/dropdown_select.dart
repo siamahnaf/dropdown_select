@@ -487,7 +487,14 @@ class _DropdownSelectState extends State<DropdownSelect>
   void didUpdateWidget(covariant DropdownSelect oldWidget) {
     super.didUpdateWidget(oldWidget);
     updateFunction(oldWidget: oldWidget);
-    updateInitialValue();
+    if (widget.dropDownList != oldWidget.dropDownList ||
+        widget.initialValue != oldWidget.initialValue) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          updateInitialValue();
+        }
+      });
+    }
   }
 
   @override
