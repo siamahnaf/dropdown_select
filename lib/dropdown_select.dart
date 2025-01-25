@@ -71,6 +71,7 @@ class DropdownSelect extends StatefulWidget {
       this.searchFocusNode,
       this.textFieldFocusNode,
       this.searchAutofocus = false,
+      this.emptyMessage,
       this.searchDecoration,
       this.searchShowCursor,
       this.searchKeyboardType,
@@ -146,6 +147,7 @@ class DropdownSelect extends StatefulWidget {
         searchShowCursor = null,
         singleController = null,
         searchDecoration = null,
+        emptyMessage = null,
         keyboardType = null;
 
   ///single and multiple dropdown controller.
@@ -176,6 +178,8 @@ class DropdownSelect extends StatefulWidget {
   final bool isMultiSelection;
 
   final TextStyle? textStyle;
+
+  final String? emptyMessage;
 
   final EdgeInsets? padding;
 
@@ -567,9 +571,7 @@ class _DropdownSelectState extends State<DropdownSelect>
             onTap: () {
               _searchAutofocus = widget.searchAutofocus;
               if (!_isExpanded) {
-                if (_dropDownList.isNotEmpty) {
-                  _showOverlay();
-                }
+                _showOverlay();
               } else {
                 if (widget.readOnly) hideOverlay();
               }
@@ -816,6 +818,7 @@ class _DropdownSelectState extends State<DropdownSelect>
                         dropDownList: _dropDownList,
                         listTextStyle: _listTileTextStyle,
                         selectListTextStyle: _selectListTextStyle,
+                        emptyMessage: widget.emptyMessage,
                         selectColor: widget.selectColor,
                         onChanged: (item) {
                           setState(() {
