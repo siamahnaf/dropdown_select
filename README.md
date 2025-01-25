@@ -76,8 +76,6 @@ DropdownSelect(
   </tr>
 </table>
 
-## Usage
-
 ### Controllers
 You need to use `SingleValueDropDownController` for single dropdown and `MultiValueDropDownController` for multiple dropdown.
 
