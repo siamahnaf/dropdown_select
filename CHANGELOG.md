@@ -1,3 +1,3 @@
-## 1.2.0
+## 2.0.8
 
-* TODO: This is the initial release of Dropdown Select
+* Add many bug fixing
