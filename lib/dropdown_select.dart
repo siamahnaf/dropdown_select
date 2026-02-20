@@ -872,6 +872,7 @@ class _DropdownSelectState extends State<DropdownSelect>
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 5),
               child: Container(
+                clipBehavior: Clip.hardEdge,
                 padding: widget.dropdownContainerPadding,
                 decoration: widget.dropdownContainerDecoration ??
                     BoxDecoration(

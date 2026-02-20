@@ -1,3 +1,6 @@
+## 3.0.4
+* Dropdown container now clipped.
+
 ## 3.0.3
 * Small bug fixing and added gif demo.
 
