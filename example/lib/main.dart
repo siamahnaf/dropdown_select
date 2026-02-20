@@ -167,6 +167,8 @@ class _ExamplePageState extends State<ExamplePage> {
               child: DropdownSelect(
                 dropDownList: _longItems,
                 textFieldDecoration: _inputDecoration('Pick an item'),
+                suffixIconColor: Colors.red,
+                suffixIconPadding: EdgeInsets.symmetric(horizontal: 3),
                 onChanged: (_) {},
               ),
             ),

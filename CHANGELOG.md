@@ -1,3 +1,8 @@
+## 3.0.5
+* **New:** `suffixIconColor` — background color of the suffix icon area.
+* **New:** `suffixIconPadding` — padding inside the suffix icon area. Supports values down to 0.
+* **Fixed:** Suffix icon padding now works at any value (including 0) by removing Flutter's default 48×48 minimum touch target constraint.
+
 ## 3.0.4
 * Dropdown container now clipped.
 

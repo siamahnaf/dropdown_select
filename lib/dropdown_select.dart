@@ -78,6 +78,8 @@ class DropdownSelect extends StatefulWidget {
       this.listSpace = 0,
       this.clearOption = true,
       this.clearIconProperty,
+      this.suffixIconColor,
+      this.suffixIconPadding,
       this.listPadding,
       this.listTextStyle,
       this.selectListTextStyle,
@@ -155,6 +157,8 @@ class DropdownSelect extends StatefulWidget {
         keyboardType = null,
         selectBorderRadius = null,
         selectTextColor = Colors.white,
+        suffixIconColor = null,
+        suffixIconPadding = null,
         dropdownContainerPadding =
             const EdgeInsets.symmetric(horizontal: 6, vertical: 6);
 
@@ -244,6 +248,12 @@ class DropdownSelect extends StatefulWidget {
 
   /// Customizes the clear icon.
   final IconProperty? clearIconProperty;
+
+  /// Background color of the suffix icon area.
+  final Color? suffixIconColor;
+
+  /// Padding inside the suffix icon area.
+  final EdgeInsets? suffixIconPadding;
 
   /// Space between the text field and the dropdown list. Defaults to 0.
   final double listSpace;
@@ -627,45 +637,51 @@ class _DropdownSelectState extends State<DropdownSelect>
                 widget.validator != null ? widget.validator!(value) : null,
             decoration: widget.textFieldDecoration != null
                 ? widget.textFieldDecoration!.copyWith(
-                    suffixIcon: (_cnt.text.isEmpty || !widget.clearOption)
-                        ? Icon(
-                            widget.dropDownIconProperty?.icon ??
-                                Icons.arrow_drop_down_outlined,
-                            size: widget.dropDownIconProperty?.size,
-                            color: widget.dropDownIconProperty?.color,
-                          )
-                        : widget.clearOption
-                            ? InkWell(
-                                onTap: clearFun,
-                                child: Icon(
-                                  widget.clearIconProperty?.icon ?? Icons.clear,
-                                  size: widget.clearIconProperty?.size,
-                                  color: widget.clearIconProperty?.color,
-                                ),
-                              )
-                            : null,
+                    suffixIcon: Container(
+                      color: widget.suffixIconColor,
+                      padding: widget.suffixIconPadding ?? EdgeInsets.zero,
+                      child: (_cnt.text.isEmpty || !widget.clearOption)
+                          ? Icon(
+                              widget.dropDownIconProperty?.icon ??
+                                  Icons.arrow_drop_down_outlined,
+                              size: widget.dropDownIconProperty?.size,
+                              color: widget.dropDownIconProperty?.color,
+                            )
+                          : InkWell(
+                              onTap: clearFun,
+                              child: Icon(
+                                widget.clearIconProperty?.icon ?? Icons.clear,
+                                size: widget.clearIconProperty?.size,
+                                color: widget.clearIconProperty?.color,
+                              ),
+                            ),
+                    ),
+                    suffixIconConstraints: const BoxConstraints(),
                   )
                 : InputDecoration(
                     floatingLabelBehavior: FloatingLabelBehavior.always,
                     hintText: _hintText,
                     hintStyle: const TextStyle(fontWeight: FontWeight.normal),
-                    suffixIcon: (_cnt.text.isEmpty || !widget.clearOption)
-                        ? Icon(
-                            widget.dropDownIconProperty?.icon ??
-                                Icons.arrow_drop_down_outlined,
-                            size: widget.dropDownIconProperty?.size,
-                            color: widget.dropDownIconProperty?.color,
-                          )
-                        : widget.clearOption
-                            ? InkWell(
-                                onTap: clearFun,
-                                child: Icon(
-                                  widget.clearIconProperty?.icon ?? Icons.clear,
-                                  size: widget.clearIconProperty?.size,
-                                  color: widget.clearIconProperty?.color,
-                                ),
-                              )
-                            : null,
+                    suffixIcon: Container(
+                      color: widget.suffixIconColor,
+                      padding: widget.suffixIconPadding ?? EdgeInsets.zero,
+                      child: (_cnt.text.isEmpty || !widget.clearOption)
+                          ? Icon(
+                              widget.dropDownIconProperty?.icon ??
+                                  Icons.arrow_drop_down_outlined,
+                              size: widget.dropDownIconProperty?.size,
+                              color: widget.dropDownIconProperty?.color,
+                            )
+                          : InkWell(
+                              onTap: clearFun,
+                              child: Icon(
+                                widget.clearIconProperty?.icon ?? Icons.clear,
+                                size: widget.clearIconProperty?.size,
+                                color: widget.clearIconProperty?.color,
+                              ),
+                            ),
+                    ),
+                    suffixIconConstraints: const BoxConstraints(),
                   ),
           ),
         );

@@ -98,6 +98,8 @@ You need to use `SingleValueDropDownController` for single dropdown and `MultiVa
 - **listSpace**: Spacing for list on DropdownList. Default is `0`
 - **clearOption**: Enable or disable clear button
 - **clearIconProperty**: Clear icon property. Same as `dropdownIconProperty`
+- **suffixIconColor**: Background color of the suffix icon area.
+- **suffixIconPadding**: Padding inside the suffix icon area.
 - **listPadding**: Padding for dropdown list items.
 - **listTextStyle**: Text style for dropdown list items.
 - **selectListTextStyle**: Text style for dropdown selected item.
