@@ -3,11 +3,14 @@
   <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/siamahnaf/assets-kit/main/logo/logo-black.png">
   <img alt="Siam Ahnaf" src="https://raw.githubusercontent.com/siamahnaf/assets-kit/main/logo/logo-black.png" height="auto" width="240">
 </picture>
+<br/>
+<br/>
 
 # Flutter Dropdown Select
 
 A Flutter dropdown widget with Material Design styling, supporting single/multi-select options and tooltips for enhanced usability.
 
+### Features
 - Searchable dropdown
 - Single & multi-selection
 - Material design styling
@@ -131,10 +134,6 @@ You need to use `SingleValueDropDownController` for single dropdown and `MultiVa
 - **listTextStyle**: Text style for dropdown list items.
 - **checkBoxProperty**: Customizes the properties of multiple checkboxes.
 - **autovalidateMode**: To enable auto validation
-
-### Re-arranged By Siam Ahnaf
-https://siamahnaf.com
-
 
 ## Connect with me
 <div style="display: flex; align-items: center; gap: 3px;">

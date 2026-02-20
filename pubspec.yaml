@@ -1,6 +1,6 @@
 name: dropdown_select
 description: "A Flutter dropdown widget with Material Design styling, supporting single/multi-select options and tooltips for enhanced usability."
-version: 3.0.1
+version: 3.0.2
 homepage: https://github.com/siamahnaf/dropdown_select
 repository: https://github.com/siamahnaf/dropdown_select
 

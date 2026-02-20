@@ -1,6 +1,9 @@
 ## 3.0.1
 * Small bug fixing and added gif demo.
 
+## 3.0.1
+* Small bug fixing and added gif demo.
+
 ## 3.0.0
 
 * **New:** `selectBorderRadius` — customize the border radius of the selected item highlight (single-select).
