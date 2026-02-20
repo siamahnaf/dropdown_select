@@ -8,8 +8,6 @@
 
 A Flutter dropdown widget with Material Design styling, supporting single/multi-select options and tooltips for enhanced usability.
 
-> This is a fork of [dropdown_textfield](https://github.com/srtraj/dropdown_textfield) by adding many community wanted features
-
 - Searchable dropdown
 - Single & multi-selection
 - Material design styling
@@ -60,25 +58,8 @@ DropdownSelect(
 
 <table>
   <tr>
-    <th>Single Dropdown</th>
-    <th>Single Dropdown with Search Option</th>
-    <th>Single Dropdown with Clear Option</th>
-  </tr>
-  <tr>
-    <td><img src="https://github.com/srtraj/dropdown_textfield/raw/development/example/examples/single-dropdown.gif" alt="Single Dropdown" height="500" width="260"></td>
-    <td><img src="https://github.com/srtraj/dropdown_textfield/raw/development/example/examples/single-dropdown-with-search-option.gif" alt="Single Dropdown with Search Option" height="500" width="260"></td>
-    <td><img src="https://github.com/srtraj/dropdown_textfield/raw/development/example/examples/single-dropdown-with-clearOption.gif" alt="Single Dropdown with Clear Option" height="500" width="260"></td>
-  </tr>
-</table>
-
-<table>
-  <tr>
-    <th>Multiple Dropdown</th>
-    <th>Multiple Dropdown with All Selected Items</th>
-  </tr>
-  <tr>
-    <td><img src="https://github.com/srtraj/dropdown_textfield/raw/development/example/examples/multiselection-dropdown.gif" alt="Multiple Dropdown" height="500" width="260"></td>
-    <td><img src="https://github.com/srtraj/dropdown_textfield/raw/development/example/examples/multiselection-with-all-selected-items.gif" alt="Multiple Dropdown with All Selected Items" height="500" width="260"></td>
+    <td><img src="demo/demo1.gif" alt="Demo 1" width="260"></td>
+    <td><img src="demo/demo2.gif" alt="Demo 2" width="260"></td>
   </tr>
 </table>
 
@@ -116,7 +97,10 @@ You need to use `SingleValueDropDownController` for single dropdown and `MultiVa
 - **clearIconProperty**: Clear icon property. Same as `dropdownIconProperty`
 - **listPadding**: Padding for dropdown list items.
 - **listTextStyle**: Text style for dropdown list items.
-- **selectListTextStyle**: Text style for dropdown selected item
+- **selectListTextStyle**: Text style for dropdown selected item.
+- **selectBorderRadius**: Border radius of the selected item highlight. Defaults to `BorderRadius.circular(12)`.
+- **selectTextColor**: Text color of the selected item. Defaults to `Colors.white`.
+- **dropdownContainerPadding**: Padding inside the dropdown container. Defaults to `EdgeInsets.symmetric(horizontal: 6, vertical: 6)`.
 - **keyboardType**: Keyboard type for main text field
 - **autovalidateMode**: To enable auto validation
 
@@ -162,8 +146,3 @@ https://siamahnaf.com
 <a href="https://t.me/siamahnaf198" style="margin-right: 8px"><img src="https://raw.githubusercontent.com/siamahnaf/assets-kit/main/icons/telegram.png" width="40" height="40"></a>
 <a href="https://www.npmjs.com/~siamahnaf" style="margin-right: 8px"><img src="https://raw.githubusercontent.com/siamahnaf/assets-kit/main/icons/npm.png" width="40" height="40"></a>
 </div>
-
-
-------------
-
-<p align="center" color="red"><a href="https://www.siamahnaf.com/">www.siamahnaf.com</a></p>

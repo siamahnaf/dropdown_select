@@ -16,6 +16,7 @@ class MultiSelection extends StatefulWidget {
       required this.listPadding,
       this.listTextStyle,
       this.checkBoxProperty});
+
   final List<DropDownValueModel> dropDownList;
   final ValueSetter onChanged;
   final List<bool> list;
@@ -52,8 +53,10 @@ class _MultiSelectionState extends State<MultiSelection> {
                 padding: EdgeInsets.zero,
                 itemCount: widget.dropDownList.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return SizedBox(
-                    height: widget.listTileHeight,
+                  return ConstrainedBox(
+                    // Use minHeight so long item names wrap rather than being clipped.
+                    constraints:
+                        BoxConstraints(minHeight: widget.listTileHeight),
                     child: Padding(
                       padding: EdgeInsets.only(
                         bottom: widget.listPadding.bottom,
@@ -65,12 +68,12 @@ class _MultiSelectionState extends State<MultiSelection> {
                         children: [
                           Expanded(
                             child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10),
+                              padding: const EdgeInsets.symmetric(horizontal: 4),
                               child: Row(
                                 children: [
                                   Expanded(
-                                    child: Text(widget.dropDownList[index].name,
+                                    child: Text(
+                                        widget.dropDownList[index].name,
                                         style: widget.listTextStyle),
                                   ),
                                   if (widget.dropDownList[index].toolTipMsg !=

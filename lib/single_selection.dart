@@ -20,6 +20,7 @@ class SingleSelection extends StatefulWidget {
       required this.listTileHeight,
       this.emptyMessage,
       required this.selectColor,
+      this.selectBorderRadius,
       this.selectListTextStyle,
       this.onSearchTap,
       this.onSearchSubmit,
@@ -27,6 +28,7 @@ class SingleSelection extends StatefulWidget {
       this.searchDecoration,
       required this.listPadding,
       this.clearIconProperty});
+
   final List<DropDownValueModel> dropDownList;
   final ValueSetter onChanged;
   final double height;
@@ -38,12 +40,13 @@ class SingleSelection extends StatefulWidget {
   final FocusNode mainFocusNode;
   final TextInputType? searchKeyboardType;
   final Color selectColor;
+  final BorderRadius? selectBorderRadius;
   final bool searchAutofocus;
   final bool? searchShowCursor;
   final TextEditingController mainController;
   final bool autoSort;
-  final Function? onSearchTap;
-  final Function? onSearchSubmit;
+  final VoidCallback? onSearchTap;
+  final VoidCallback? onSearchSubmit;
   final TextStyle? listTextStyle;
   final TextStyle? selectListTextStyle;
   final ListPadding listPadding;
@@ -58,9 +61,9 @@ class SingleSelection extends StatefulWidget {
 class _SingleSelectionState extends State<SingleSelection> {
   late List<DropDownValueModel> newDropDownList;
   late TextEditingController _searchCnt;
-  late FocusScopeNode _focusScopeNode;
   late InputDecoration _inpDec;
-  onItemChanged(String value) {
+
+  void onItemChanged(String value) {
     setState(() {
       if (value.isEmpty) {
         newDropDownList = List.from(widget.dropDownList);
@@ -75,12 +78,10 @@ class _SingleSelectionState extends State<SingleSelection> {
 
   @override
   void initState() {
-    _focusScopeNode = FocusScopeNode();
-    _inpDec = widget.searchDecoration ?? InputDecoration();
+    _inpDec = widget.searchDecoration ?? const InputDecoration();
     if (widget.searchAutofocus) {
       widget.searchFocusNode.requestFocus();
     }
-    _focusScopeNode.requestFocus();
     newDropDownList = List.from(widget.dropDownList);
     _searchCnt = TextEditingController();
     if (widget.autoSort) {
@@ -131,12 +132,10 @@ class _SingleSelectionState extends State<SingleSelection> {
                       onItemChanged('');
                     },
                     child: widget.searchFocusNode.hasFocus
-                        ? InkWell(
-                            child: Icon(
-                              widget.clearIconProperty?.icon ?? Icons.close,
-                              size: widget.clearIconProperty?.size,
-                              color: widget.clearIconProperty?.color,
-                            ),
+                        ? Icon(
+                            widget.clearIconProperty?.icon ?? Icons.close,
+                            size: widget.clearIconProperty?.size,
+                            color: widget.clearIconProperty?.color,
                           )
                         : const SizedBox.shrink(),
                   ),
@@ -158,33 +157,36 @@ class _SingleSelectionState extends State<SingleSelection> {
               padding: EdgeInsets.zero,
               itemCount: newDropDownList.length,
               itemBuilder: (BuildContext context, int index) {
-                return Container(
-                  height: widget.listTileHeight,
-                  decoration: BoxDecoration(
-                    color: widget.mainController.text.trim() ==
-                            newDropDownList[index].name
-                        ? widget.selectColor
-                        : Colors.transparent,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Padding(
+                final bool isSelected = widget.mainController.text.trim() ==
+                    newDropDownList[index].name;
+                final BorderRadius radius =
+                    widget.selectBorderRadius ?? BorderRadius.circular(12);
+                return InkWell(
+                  onTap: () {
+                    widget.onChanged(newDropDownList[index]);
+                  },
+                  borderRadius: radius,
+                  child: Container(
+                    // Use minHeight so that long text wraps rather than being clipped.
+                    constraints:
+                        BoxConstraints(minHeight: widget.listTileHeight),
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? widget.selectColor
+                          : Colors.transparent,
+                      borderRadius: radius,
+                    ),
                     padding: EdgeInsets.only(
                       right: widget.listPadding.right,
                       left: widget.listPadding.left,
                       bottom: widget.listPadding.bottom,
                       top: widget.listPadding.top,
                     ),
-                    child: InkWell(
-                      onTap: () {
-                        widget.onChanged(newDropDownList[index]);
-                      },
-                      child: Text(
-                        newDropDownList[index].name,
-                        style: widget.mainController.text.trim() ==
-                                newDropDownList[index].name
-                            ? widget.selectListTextStyle
-                            : widget.listTextStyle,
-                      ),
+                    child: Text(
+                      newDropDownList[index].name,
+                      style: isSelected
+                          ? widget.selectListTextStyle
+                          : widget.listTextStyle,
                     ),
                   ),
                 );
@@ -201,7 +203,7 @@ class _SingleSelectionState extends State<SingleSelection> {
               ),
               child: Text(
                 widget.emptyMessage ?? 'Please provide some dropdown list.',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
                   color: Color(0xff90909A),
                 ),

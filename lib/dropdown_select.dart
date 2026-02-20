@@ -81,6 +81,10 @@ class DropdownSelect extends StatefulWidget {
       this.listPadding,
       this.listTextStyle,
       this.selectListTextStyle,
+      this.selectBorderRadius,
+      this.selectTextColor = Colors.white,
+      this.dropdownContainerPadding =
+          const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
       this.keyboardType,
       this.autovalidateMode})
       : assert(
@@ -148,31 +152,33 @@ class DropdownSelect extends StatefulWidget {
         singleController = null,
         searchDecoration = null,
         emptyMessage = null,
-        keyboardType = null;
+        keyboardType = null,
+        selectBorderRadius = null,
+        selectTextColor = Colors.white,
+        dropdownContainerPadding =
+            const EdgeInsets.symmetric(horizontal: 6, vertical: 6);
 
-  ///single and multiple dropdown controller.
-  ///It must be type of SingleValueDropDownController or MultiValueDropDownController.
+  /// Single and multi dropdown controller.
+  /// Must be [SingleValueDropDownController] or [MultiValueDropDownController].
   final dynamic controller;
 
-  ///single dropdown controller,
+  /// Single dropdown controller.
   final SingleValueDropDownController? singleController;
 
-  ///multi dropdown controller
+  /// Multi dropdown controller.
   final MultiValueDropDownController? multiController;
 
-  ///define the radius of dropdown List ,default value is 12
+  /// Custom decoration for the dropdown list container.
   final BoxDecoration? dropdownContainerDecoration;
 
-  ///initial value ,if it is null or not exist in dropDownList then it will not display value.
+  /// Initial value. If null or not in [dropDownList], no value is displayed.
   final dynamic initialValue;
 
-  ///dropDownList,List of dropdown values
-  ///List`<`DropDownValueModel`>`
+  /// List of dropdown values.
   final List<DropDownValueModel> dropDownList;
 
-  ///function,called when value selected from dropdown.
-  ///for single Selection Dropdown it will return single DropDownValueModel object,
-  ///and for multi Selection Dropdown ,it will return list of DropDownValueModel object,
+  /// Called when a value is selected.
+  /// Returns a [DropDownValueModel] for single, or [List<DropDownValueModel>] for multi.
   final ValueSetter? onChanged;
 
   final bool isMultiSelection;
@@ -183,77 +189,87 @@ class DropdownSelect extends StatefulWidget {
 
   final EdgeInsets? padding;
 
-  ///override default textfield decoration
+  /// Overrides the default text field decoration.
   final InputDecoration? textFieldDecoration;
 
-  ///customize dropdown icon size and color
+  /// Customizes the dropdown arrow icon.
   final IconProperty? dropDownIconProperty;
 
-  //Single Select selection Color
+  /// Selection highlight color for single-select.
   final Color selectColor;
 
-  ///by setting isEnabled=false to disable textfield,default value true
+  /// Border radius of the selected item highlight. Defaults to [BorderRadius.circular(12)].
+  final BorderRadius? selectBorderRadius;
+
+  /// Text color of the selected item. Defaults to [Colors.white].
+  final Color selectTextColor;
+
+  /// Padding inside the dropdown container. Defaults to [EdgeInsets.symmetric(horizontal: 6, vertical: 6)].
+  final EdgeInsets dropdownContainerPadding;
+
+  /// Set to false to disable the text field. Defaults to true.
   final bool isEnabled;
 
   final FormFieldValidator<String>? validator;
 
-  ///by setting enableSearch=true enable search option in dropdown,as of now this feature enabled only for single selection dropdown
+  /// Set to true to enable search in single-select dropdowns.
   final bool enableSearch;
 
   final bool readOnly;
 
-  ///set displayCompleteItem=true, if you want show complete list of item in textfield else it will display like 'number_of_item item selected'
+  /// Set to true to show the full list of selected items; otherwise shows "N item selected".
   final bool displayCompleteItem;
 
-  ///Maximum number of dropdown item to display,default value is 6
+  /// Maximum number of visible dropdown items. Defaults to 6.
   final int dropDownItemCount;
 
   final FocusNode? searchFocusNode;
   final FocusNode? textFieldFocusNode;
   final TextStyle? searchTextStyle;
 
-  ///override default search decoration
+  /// Overrides the default search field decoration.
   final InputDecoration? searchDecoration;
 
-  ///override default search keyboard type,only applicable if enableSearch=true,
+  /// Overrides the search keyboard type (single-select with search only).
   final TextInputType? searchKeyboardType;
 
-  ///by setting searchAutofocus=true to autofocus search textfield,only applicable if enableSearch=true,
-  ///  ///default value is false
+  /// Set to true to auto-focus the search field on open (single-select with search only).
   final bool searchAutofocus;
 
-  ///by setting searchShowCursor=false to hide cursor from search textfield,only applicable if enableSearch=true,
+  /// Set to false to hide the cursor in the search field.
   final bool? searchShowCursor;
 
-  ///by set clearOption=false to hide clear suffix icon button from textfield.
+  /// Set to false to hide the clear suffix icon.
   final bool clearOption;
 
-  ///customize Clear icon size and color
+  /// Customizes the clear icon.
   final IconProperty? clearIconProperty;
 
-  ///space between textfield and list ,default value is 0
+  /// Space between the text field and the dropdown list. Defaults to 0.
   final double listSpace;
 
-  ///dropdown List item padding
+  /// Padding for each list item.
   final ListPadding? listPadding;
 
-  ///multi dropdown submit button text
+  /// Submit button text for multi-select.
   final String? submitButtonText;
 
-  ///multi dropdown submit button color
+  /// Submit button color for multi-select.
   final Color? submitButtonColor;
 
-  ///multi dropdown submit button text style
+  /// Submit button text style for multi-select.
   final TextStyle? submitButtonTextStyle;
 
-  ///dropdown list item text style
+  /// Text style for unselected list items.
   final TextStyle? listTextStyle;
+
+  /// Text style for the selected list item.
   final TextStyle? selectListTextStyle;
 
   final TextInputType? keyboardType;
   final AutovalidateMode? autovalidateMode;
 
-  ///customize checkbox property
+  /// Customizes the checkbox appearance for multi-select.
   final CheckBoxProperty? checkBoxProperty;
 
   @override
@@ -262,9 +278,6 @@ class DropdownSelect extends StatefulWidget {
 
 class _DropdownSelectState extends State<DropdownSelect>
     with TickerProviderStateMixin {
-  static final Animatable<double> _easeInTween =
-      CurveTween(curve: Curves.easeIn);
-
   late TextEditingController _cnt;
   late String _hintText;
 
@@ -274,9 +287,15 @@ class _DropdownSelectState extends State<DropdownSelect>
   OverlayEntry? _barrierOverlay;
   final _layerLink = LayerLink();
   late AnimationController _controller;
-  late Animation<double> _heightFactor;
+
+  // FadeTransition animation: fades in quickly, fades out at full speed.
+  late CurvedAnimation _fadeAnimation;
+  // SizeTransition animation: grows from the anchor edge with a cubic ease.
+  late CurvedAnimation _sizeAnimation;
+  // True when the dropdown opens upward (not enough space below).
+  bool _isOpenUpward = false;
+
   List<bool> _multiSelectionValue = [];
-  // late String selectedItem;
   late double _height;
   late List<DropDownValueModel> _dropDownList;
   late int _maxListItem;
@@ -285,7 +304,8 @@ class _DropdownSelectState extends State<DropdownSelect>
   late FocusNode _textFieldFocusNode;
   late bool _isOutsideClickOverlay;
   late bool _isScrollPadding;
-  final int _duration = 150;
+  // Delay (ms) before requesting search focus after overlay shift.
+  static const int _duration = 200;
   late Offset _offset;
   late bool _searchAutofocus;
   late bool _isPortrait;
@@ -295,7 +315,8 @@ class _DropdownSelectState extends State<DropdownSelect>
   late TextStyle _selectListTextStyle;
   late ListPadding _listPadding;
   late TextDirection _currentDirection;
-  GlobalKey overlayKey = GlobalKey();
+  final GlobalKey overlayKey = GlobalKey();
+
   @override
   void initState() {
     _cnt = TextEditingController();
@@ -308,9 +329,21 @@ class _DropdownSelectState extends State<DropdownSelect>
     _isExpanded = false;
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: _duration),
+      duration: const Duration(milliseconds: 200),
+      reverseDuration: const Duration(milliseconds: 150),
     );
-    _heightFactor = _controller.drive(_easeInTween);
+    // Grows/shrinks from the anchor edge with a smooth cubic curve.
+    _sizeAnimation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeOutCubic,
+      reverseCurve: Curves.easeInCubic,
+    );
+    // Fades in fast (first 70% of open), fades out linearly.
+    _fadeAnimation = CurvedAnimation(
+      parent: _controller,
+      curve: const Interval(0.0, 0.7, curve: Curves.easeOut),
+      reverseCurve: Curves.easeIn,
+    );
     _searchWidgetHeight = 70;
     _hintText = 'Select Item';
     _searchFocusNode.addListener(() {
@@ -350,7 +383,6 @@ class _DropdownSelectState extends State<DropdownSelect>
       _multiSelectionValue.add(false);
     }
 
-    ///initial value load
     updateInitialValue();
     updateFunction();
     super.initState();
@@ -365,18 +397,18 @@ class _DropdownSelectState extends State<DropdownSelect>
     return textPainter.size;
   }
 
-  updateInitialValue() {
+  void updateInitialValue() {
     if (widget.initialValue != null) {
       _dropDownList = List.from(widget.dropDownList);
       if (widget.isMultiSelection) {
         for (int i = 0; i < widget.initialValue.length; i++) {
-          var index = _dropDownList.indexWhere((element) =>
+          final index = _dropDownList.indexWhere((element) =>
               element.value.trim() == widget.initialValue[i].trim());
           if (index != -1) {
             _multiSelectionValue[index] = true;
           }
         }
-        int count =
+        final int count =
             _multiSelectionValue.where((element) => element).toList().length;
 
         _cnt.text = (count == 0
@@ -385,7 +417,7 @@ class _DropdownSelectState extends State<DropdownSelect>
                 ? (widget.initialValue ?? []).join(',')
                 : '$count item selected');
       } else {
-        var element = _dropDownList.firstWhere(
+        final element = _dropDownList.firstWhere(
           (element) => element.value.trim() == widget.initialValue.trim(),
           orElse: () => DropDownValueModel(value: '', name: ''),
         );
@@ -397,13 +429,14 @@ class _DropdownSelectState extends State<DropdownSelect>
     }
   }
 
-  updateFunction({DropdownSelect? oldWidget}) {
-    Function eq = const DeepCollectionEquality().equals;
+  void updateFunction({DropdownSelect? oldWidget}) {
     _dropDownList = List.from(widget.dropDownList);
     _listPadding = widget.listPadding ?? ListPadding();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (widget.isMultiSelection) {
-        if (oldWidget != null && !eq(oldWidget.dropDownList, _dropDownList)) {
+        if (oldWidget != null &&
+            !const DeepCollectionEquality()
+                .equals(oldWidget.dropDownList, _dropDownList)) {
           _multiSelectionValue = [];
           _cnt.text = '';
           for (int i = 0; i < _dropDownList.length; i++) {
@@ -411,8 +444,6 @@ class _DropdownSelectState extends State<DropdownSelect>
           }
         }
         if (widget.multiController != null) {
-          if (oldWidget != null &&
-              oldWidget.multiController?.dropDownValueList != null) {}
           if (widget.multiController?.dropDownValueList != null) {
             _multiSelectionValue = [];
             for (int i = 0; i < _dropDownList.length; i++) {
@@ -421,7 +452,7 @@ class _DropdownSelectState extends State<DropdownSelect>
             for (int i = 0;
                 i < widget.multiController!.dropDownValueList!.length;
                 i++) {
-              var index = _dropDownList.indexWhere((element) =>
+              final index = _dropDownList.indexWhere((element) =>
                   element == widget.multiController!.dropDownValueList![i]);
               if (index != -1) {
                 _multiSelectionValue[index] = true;
@@ -429,12 +460,12 @@ class _DropdownSelectState extends State<DropdownSelect>
             }
 
             if (oldWidget?.displayCompleteItem != widget.displayCompleteItem) {
-              List<String> names =
+              final List<String> names =
                   (widget.multiController?.dropDownValueList ?? [])
                       .map((dataModel) => dataModel.name)
                       .toList();
 
-              int count = _multiSelectionValue
+              final int count = _multiSelectionValue
                   .where((element) => element)
                   .toList()
                   .length;
@@ -465,7 +496,8 @@ class _DropdownSelectState extends State<DropdownSelect>
       _listTileTextStyle =
           (widget.listTextStyle ?? Theme.of(context).textTheme.titleMedium)!;
       _selectListTextStyle = (widget.selectListTextStyle ??
-          Theme.of(context).textTheme.titleMedium)!;
+              Theme.of(context).textTheme.titleMedium)!
+          .copyWith(color: widget.selectTextColor);
       _listTileHeight =
           _textWidgetSize('dummy Text', _listTileTextStyle).height +
               _listPadding.top +
@@ -501,6 +533,8 @@ class _DropdownSelectState extends State<DropdownSelect>
   void dispose() {
     if (widget.searchFocusNode == null) _searchFocusNode.dispose();
     if (widget.textFieldFocusNode == null) _textFieldFocusNode.dispose();
+    _sizeAnimation.dispose();
+    _fadeAnimation.dispose();
     if (_controller.isAnimating) {
       _controller.stop();
     }
@@ -509,7 +543,7 @@ class _DropdownSelectState extends State<DropdownSelect>
     super.dispose();
   }
 
-  clearFun() {
+  void clearFun() {
     if (_isExpanded) {
       _isExpanded = !_isExpanded;
       hideOverlay();
@@ -560,14 +594,14 @@ class _DropdownSelectState extends State<DropdownSelect>
             enabled: widget.isEnabled,
             readOnly: widget.readOnly,
             onTapOutside: (event) {
-              final context = overlayKey.currentContext;
-              if (context != null) {
+              final ctx = overlayKey.currentContext;
+              if (ctx != null) {
                 final RenderBox? renderBox =
-                    context.findRenderObject() as RenderBox?;
+                    ctx.findRenderObject() as RenderBox?;
                 if (renderBox != null) {
                   final overlayPosition = renderBox.localToGlobal(Offset.zero);
                   final overlaySize = renderBox.size;
-                  bool isOverlayTap =
+                  final bool isOverlayTap =
                       (overlayPosition.dx <= event.position.dx &&
                               event.position.dx <=
                                   overlayPosition.dx + overlaySize.width) &&
@@ -640,19 +674,20 @@ class _DropdownSelectState extends State<DropdownSelect>
   }
 
   Future<void> _showOverlay() async {
-    _controller.forward();
+    // Always start animation from zero for a clean open.
+    _controller.forward(from: 0.0);
     _isExpanded = true;
     final overlay = Overlay.of(context);
     final renderBox = context.findRenderObject() as RenderBox;
     final size = renderBox.size;
     _offset = renderBox.localToGlobal(Offset.zero);
-    double posFromTop = _offset.dy;
-    double posFromBot = MediaQuery.of(context).size.height - posFromTop;
+    final double posFromTop = _offset.dy;
+    final double posFromBot = MediaQuery.of(context).size.height - posFromTop;
 
-    double dropdownListHeight = _height +
+    final double dropdownListHeight = _height +
         (widget.enableSearch ? _searchWidgetHeight : 0) +
         widget.listSpace;
-    double ht = dropdownListHeight + 120;
+    final double ht = dropdownListHeight + 120;
     if (_searchAutofocus &&
         !(posFromBot < ht) &&
         posFromBot < _keyboardHeight &&
@@ -675,53 +710,55 @@ class _DropdownSelectState extends State<DropdownSelect>
         : _isScrollPadding
             ? size.height - (_keyboardHeight - posFromBot)
             : size.height;
+
+    // Determines animation grow direction (upward vs downward).
+    _isOpenUpward = posFromBot < ht;
+
     if (_isOutsideClickOverlay) {
       _openOutSideClickOverlay(context);
     }
-    _entry = OverlayEntry(
-      builder: (context) => Positioned(
+
+    if (_isScrollPadding) {
+      _entry2 = OverlayEntry(
+        builder: (context) => Positioned(
           width: size.width,
           child: CompositedTransformFollower(
-              targetAnchor: posFromBot < ht
-                  ? Alignment.bottomCenter
-                  : Alignment.topCenter,
-              followerAnchor: posFromBot < ht
-                  ? Alignment.bottomCenter
-                  : Alignment.topCenter,
-              link: _layerLink,
-              showWhenUnlinked: false,
-              offset: Offset(
-                0,
-                posFromBot < ht
-                    ? htPos - widget.listSpace
-                    : htPos + widget.listSpace,
-              ),
-              child: AnimatedBuilder(
-                animation: _controller.view,
-                builder: buildOverlay,
-              ))),
-    );
-    _entry2 = OverlayEntry(
-      builder: (context) => Positioned(
+            targetAnchor: Alignment.bottomCenter,
+            followerAnchor: Alignment.bottomCenter,
+            link: _layerLink,
+            showWhenUnlinked: false,
+            offset: Offset(0, htPos),
+            child: _buildOverlayContent(),
+          ),
+        ),
+      );
+      overlay.insert(_entry2!);
+    } else {
+      _entry = OverlayEntry(
+        builder: (context) => Positioned(
           width: size.width,
           child: CompositedTransformFollower(
-              targetAnchor: Alignment.bottomCenter,
-              followerAnchor: Alignment.bottomCenter,
-              link: _layerLink,
-              showWhenUnlinked: false,
-              offset: Offset(
-                0,
-                htPos,
-              ),
-              child: AnimatedBuilder(
-                animation: _controller.view,
-                builder: buildOverlay,
-              ))),
-    );
-    overlay.insert(_isScrollPadding ? _entry2! : _entry!);
+            targetAnchor:
+                posFromBot < ht ? Alignment.bottomCenter : Alignment.topCenter,
+            followerAnchor:
+                posFromBot < ht ? Alignment.bottomCenter : Alignment.topCenter,
+            link: _layerLink,
+            showWhenUnlinked: false,
+            offset: Offset(
+              0,
+              posFromBot < ht
+                  ? htPos - widget.listSpace
+                  : htPos + widget.listSpace,
+            ),
+            child: _buildOverlayContent(),
+          ),
+        ),
+      );
+      overlay.insert(_entry!);
+    }
   }
 
-  _openOutSideClickOverlay(BuildContext context) {
+  void _openOutSideClickOverlay(BuildContext context) {
     final overlay2 = Overlay.of(context);
     _barrierOverlay = OverlayEntry(builder: (context) {
       final size = MediaQuery.of(context).size;
@@ -740,7 +777,6 @@ class _DropdownSelectState extends State<DropdownSelect>
   }
 
   void hideOverlay() {
-    if (!_isScrollPadding) {}
     _controller.reverse().then<void>((void value) {
       if (_entry != null && _entry!.mounted) {
         _entry?.remove();
@@ -774,7 +810,7 @@ class _DropdownSelectState extends State<DropdownSelect>
     _showOverlay();
     _textFieldFocusNode.requestFocus();
 
-    Future.delayed(Duration(milliseconds: _duration), () {
+    Future.delayed(const Duration(milliseconds: _duration), () {
       _searchFocusNode.requestFocus();
     });
   }
@@ -794,19 +830,49 @@ class _DropdownSelectState extends State<DropdownSelect>
     _textFieldFocusNode.requestFocus();
   }
 
-  Widget buildOverlay(context, child) {
-    // final bool isRTL = currentDirection == TextDirection.rtl;
+  /// Builds the animated dropdown overlay content.
+  ///
+  /// Animation: scale 0.95→1.0 + translateY ±8px→0 + fade-in.
+  /// - Opens downward → starts 8 px above its final position, slides down.
+  /// - Opens upward   → starts 8 px below its final position, slides up.
+  /// - Scale is anchored at the trigger edge (topCenter / bottomCenter).
+  /// - The [Material] subtree is passed as [AnimatedBuilder.child] so it is
+  ///   built only once; only the thin [Opacity]+[Transform] shell rebuilds
+  ///   on each animation frame.
+  Widget _buildOverlayContent() {
     return Directionality(
       textDirection: _currentDirection,
-      child: ClipRect(
-        child: Align(
-          heightFactor: _heightFactor.value,
-          child: Material(
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, child) {
+          final double t = _sizeAnimation.value; // 0.0 → 1.0, easeOutCubic
+          // Scale: 95 % → 100 %, anchored at the dropdown's trigger edge.
+          final double scale = 0.95 + 0.05 * t;
+          // Translate: slides from ±8 px toward the trigger into final place.
+          final double dy =
+              _isOpenUpward ? 4.0 * (1.0 - t) : -4.0 * (1.0 - t);
+
+          return Opacity(
+            opacity: _fadeAnimation.value,
+            child: Transform.translate(
+              offset: Offset(0.0, dy),
+              child: Transform.scale(
+                scale: scale,
+                alignment: _isOpenUpward
+                    ? Alignment.bottomCenter
+                    : Alignment.topCenter,
+                child: child,
+              ),
+            ),
+          );
+        },
+        child: Material(
             key: overlayKey,
             color: Colors.transparent,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 5),
               child: Container(
+                padding: widget.dropdownContainerPadding,
                 decoration: widget.dropdownContainerDecoration ??
                     BoxDecoration(
                       color: Colors.white,
@@ -833,6 +899,7 @@ class _DropdownSelectState extends State<DropdownSelect>
                         selectListTextStyle: _selectListTextStyle,
                         emptyMessage: widget.emptyMessage,
                         selectColor: widget.selectColor,
+                        selectBorderRadius: widget.selectBorderRadius,
                         onChanged: (item) {
                           setState(() {
                             _cnt.text = item.name;
@@ -868,8 +935,8 @@ class _DropdownSelectState extends State<DropdownSelect>
                         onChanged: (val) {
                           _isExpanded = !_isExpanded;
                           _multiSelectionValue = val;
-                          List<DropDownValueModel> result = [];
-                          List completeList = [];
+                          final List<DropDownValueModel> result = [];
+                          final List<String> completeList = [];
                           for (int i = 0;
                               i < _multiSelectionValue.length;
                               i++) {
@@ -878,7 +945,7 @@ class _DropdownSelectState extends State<DropdownSelect>
                               completeList.add(_dropDownList[i].name);
                             }
                           }
-                          int count = _multiSelectionValue
+                          final int count = _multiSelectionValue
                               .where((element) => element)
                               .toList()
                               .length;
@@ -906,16 +973,16 @@ class _DropdownSelectState extends State<DropdownSelect>
             ),
           ),
         ),
-      ),
     );
   }
 }
+
 
 class DropDownValueModel extends Equatable {
   final String name;
   final dynamic value;
 
-  ///as of now only added for multi selection dropdown
+  /// Tooltip message for multi-select items.
   final String? toolTipMsg;
 
   const DropDownValueModel(
@@ -933,6 +1000,7 @@ class DropDownValueModel extends Equatable {
         'value': value,
         'toolTipMsg': toolTipMsg,
       };
+
   @override
   List<Object> get props => [name, value];
 
@@ -953,14 +1021,15 @@ class SingleValueDropDownController extends ChangeNotifier {
   SingleValueDropDownController({DropDownValueModel? data}) {
     setDropDown(data);
   }
-  setDropDown(DropDownValueModel? model) {
+
+  void setDropDown(DropDownValueModel? model) {
     if (dropDownValue != model) {
       dropDownValue = model;
       notifyListeners();
     }
   }
 
-  clearDropDown() {
+  void clearDropDown() {
     if (dropDownValue != null) {
       dropDownValue = null;
       notifyListeners();
@@ -973,26 +1042,27 @@ class MultiValueDropDownController extends ChangeNotifier {
   MultiValueDropDownController({List<DropDownValueModel>? data}) {
     setDropDown(data);
   }
-  setDropDown(List<DropDownValueModel>? modelList) {
+
+  void setDropDown(List<DropDownValueModel>? modelList) {
     List<DropDownValueModel>? lst;
     if (modelList != null && modelList.isNotEmpty) {
-      List<DropDownValueModel> list = [];
-      for (DropDownValueModel item in modelList) {
+      final List<DropDownValueModel> list = [];
+      for (final DropDownValueModel item in modelList) {
         if (!list.contains(item)) {
           list.add(item);
         }
       }
       lst = list;
     }
-    Function unOrdDeepEq = const DeepCollectionEquality.unordered().equals;
 
-    if (!unOrdDeepEq(lst, dropDownValueList)) {
+    if (!const DeepCollectionEquality.unordered()
+        .equals(lst, dropDownValueList)) {
       dropDownValueList = lst;
       notifyListeners();
     }
   }
 
-  clearDropDown() {
+  void clearDropDown() {
     if (dropDownValueList != null) {
       dropDownValueList = null;
       notifyListeners();
@@ -1006,10 +1076,10 @@ class ListPadding {
   double left;
   double right;
   ListPadding({
-    this.top = 15,
-    this.bottom = 15,
-    this.left = 10,
-    this.right = 10,
+    this.top = 8,
+    this.bottom = 8,
+    this.left = 8,
+    this.right = 8,
   });
 }
 
